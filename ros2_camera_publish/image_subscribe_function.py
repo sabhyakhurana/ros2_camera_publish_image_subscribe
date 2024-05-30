@@ -36,19 +36,23 @@ class ImageSubscriber(Node):
         frame = np.reshape(msg.data, (height, width, channel))
         self.get_logger().info("Image Received")
         
-        cv2.imwrite("ani717.png", frame)
+        cv2.imshow('Video Stream', frame)
+        cv2.waitKey(2)
 
 
 def main(args=None):
+    print("running here")
     rclpy.init(args=args)
     image_subscriber = ImageSubscriber()
     rclpy.spin(image_subscriber)
 
     image_subscriber.destroy_node()
     rclpy.shutdown()
+    cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
+    print("running")
     main()
 
 

@@ -21,7 +21,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'execute = ros2_camera_publish.camera_publish_function:main',
+            'read = ros2_camera_publish.image_subscribe_function:main',
         ],
     },
 )
