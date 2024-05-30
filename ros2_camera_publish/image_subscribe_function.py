@@ -11,7 +11,6 @@ Example:
 
 """
 
-
 #___Import Modules:
 import numpy as np
 import cv2
@@ -26,19 +25,24 @@ class ImageSubscriber(Node):
     def __init__(self):
         super().__init__('image_subscriber')
         self.subscription = self.create_subscription(Image, '/racecar/camera', 
-                                                self.listener_callback, 10)
+                                                     self.listener_callback, 15)
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
-        height = msg.height
-        width = msg.width
-        channel = msg.step//msg.width
-        frame = np.reshape(msg.data, (height, width, channel))
         self.get_logger().info("Image Received")
         
-        cv2.imshow('Video Stream', frame)
-        cv2.waitKey(2)
-
+        # Convert the ROS Image message to a NumPy array
+        frame = np.frombuffer(msg.data, dtype=np.uint8)
+        
+        # Decode the image
+        frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
+        
+        if frame is not None:
+            # Display the image
+            cv2.imshow('Video Stream', frame)
+            cv2.waitKey(1)
+        else:
+            self.get_logger().error('Failed to decode image')
 
 def main(args=None):
     print("running here")
@@ -54,7 +58,6 @@ def main(args=None):
 if __name__ == '__main__':
     print("running")
     main()
-
 
 #                                                                              
 # end of file
