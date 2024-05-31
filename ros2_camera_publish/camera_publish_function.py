@@ -11,12 +11,13 @@ from ament_index_python.packages import get_package_share_directory
 import threading
 
 
+
 #___Global Variables:
 DEVICE_INDEX = 0 # specifies which camera
 TOPIC = 'racecar/camera'
-QUEUE_SIZE = 15
-PERIOD = 0.03  # seconds
-QUALITY = 90
+QUEUE_SIZE = 2
+PERIOD = 0.01  # seconds
+QUALITY = 80
 
 class ImagePublisher(Node):
     def __init__(self):
@@ -26,6 +27,7 @@ class ImagePublisher(Node):
         self.capture = cv2.VideoCapture(0)  # Adjust camera index if needed
 
         self.timer = self.create_timer(PERIOD, self.timer_callback)  # Adjust timer interval for desired FPS
+        
         self.i = 0
         self.lock = threading.Lock()
 
@@ -47,9 +49,8 @@ class ImagePublisher(Node):
                 return
 
 
-            # Encode frame to H.264
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), QUALITY]
-            ret, buffer = cv2.imencode('.jpg', frame, encode_param)
+            ret, buffer = cv2.imencode('.jpeg', frame, encode_param)
 
             if not ret:
                 self.get_logger().error('Failed to encode image')
