@@ -25,7 +25,7 @@ class ImageSubscriber(Node):
     def __init__(self):
         super().__init__('image_subscriber')
         self.subscription = self.create_subscription(Image, '/racecar/camera', 
-                                                     self.listener_callback, 15)
+                                                     self.listener_callback, 2)
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
