@@ -19,22 +19,25 @@ import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 
+TOPIC = "/camera/image_raw"
+QUEUE_SIZE = 1
+
 
 class ImageSubscriber(Node):
 
     def __init__(self):
         super().__init__('image_subscriber')
-        self.subscription = self.create_subscription(Image, '/racecar/camera', 
-                                                     self.listener_callback, 2)
+        self.subscription = self.create_subscription(Image, TOPIC, 
+                                                     self.listener_callback, QUEUE_SIZE)
         self.subscription  # prevent unused variable warning
 
     def listener_callback(self, msg):
         self.get_logger().info("Image Received")
         
-        # Convert the ROS Image message to a NumPy array
+        #Convert the ROS Image message to a NumPy array
         frame = np.frombuffer(msg.data, dtype=np.uint8)
         
-        # Decode the image
+        #Decode the image
         frame = cv2.imdecode(frame, cv2.IMREAD_COLOR)
         
         if frame is not None:
