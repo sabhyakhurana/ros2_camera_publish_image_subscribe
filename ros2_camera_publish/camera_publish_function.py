@@ -14,10 +14,10 @@ import threading
 
 #___Global Variables:
 DEVICE_INDEX = 0 # specifies which camera
-TOPIC = 'racecar/camera'
-QUEUE_SIZE = 2
+TOPIC = '/camera/image_raw'
+QUEUE_SIZE = 1
 PERIOD = 0.01  # seconds
-QUALITY = 80
+QUALITY = 25
 
 class ImagePublisher(Node):
     def __init__(self):
@@ -51,10 +51,6 @@ class ImagePublisher(Node):
 
             encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), QUALITY]
             ret, buffer = cv2.imencode('.jpeg', frame, encode_param)
-
-            if not ret:
-                self.get_logger().error('Failed to encode image')
-                return
 
             msg = Image()
             msg.header.stamp = self.get_clock().now().to_msg()
